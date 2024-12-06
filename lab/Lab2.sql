@@ -1,0 +1,44 @@
+DECLARE @dai INT, @rong INT, @chu_vi INT, @dien_tich INT
+SET @dai = 30
+SET @rong = 20
+SET @chu_vi = (@dai+@rong)*2
+SET	@dien_tich = @dai*@rong
+PRINT 'Chu vi:'+ CONVERT(CHAR(10), @chu_vi)
+PRINT 'Dien tich:'+ CONVERT(CHAR(10), @dien_tich)
+
+-- 1
+DECLARE @maxLuong FLOAT 
+SET @maxLuong = (SELECT MAX(luong) from NHANVIEN)
+SELECT*FROM NHANVIEN
+WHERE luong = @maxLuong
+
+-- 2
+DECLARE @luongTB_PNC FLOAT 
+SET @luongTB_PNC = (SELECT AVG(luong) FROM NHANVIEN a
+							JOIN PHONGBAN b ON a.PHG = b.MAPHG
+						WHERE TENPHG = N'Nghiên Cứu')
+
+SELECT HONV, TENLOT, TENNV, LUONG
+FROM NHANVIEN
+WHERE luong > @LuongTB_PNC
+
+--3
+DECLARE @lab2_3 TABLE (TenPhongBan NVARCHAR(15), SoLuongNV INT, LuongTB FLOAT)
+
+INSERT INTO @lab2_3
+SELECT TENPHG, COUNT(MANV), AVG(LUONG)
+FROM NHANVIEN a
+	JOIN PHONGBAN b ON a.PHG = b.MAPHG
+GROUP BY TENPHG
+HAVING AVG(LUONG) > 30000
+SELECT*FROM @lab2_3
+
+--4
+DECLARE @lab2_4 TABLE (TenPhong NVARCHAR(20), SoLuongDA INT)
+
+INSERT INTO @Lab2_4
+SELECT TENPHG, COUNT(b.MADA)
+FROM PHONGBAN a
+	JOIN DEAN b ON a.MAPHG = b.PHONG
+GROUP BY TENPHG	
+SELECT*FROM @lab2_4 
